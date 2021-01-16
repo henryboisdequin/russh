@@ -6,7 +6,7 @@ use std::process::{Child, Command, Stdio};
 fn main() {
     loop {
         print!("> ");
-        stdout().flush();
+        stdout().flush().unwrap();
 
         let mut input = String::new();
         stdin().read_line(&mut input).unwrap();
@@ -51,9 +51,10 @@ fn main() {
                         Ok(output) => {
                             previous_command = Some(output);
                         }
-                        Err(e) => {
+
+                        Err(_) => {
                             previous_command = None;
-                            eprintln!("{}", e);
+                            println!("'{}' is not a valid command", command);
                         }
                     };
                 }
@@ -62,7 +63,7 @@ fn main() {
 
         if let Some(mut final_command) = previous_command {
             // block until the final command has finished
-            final_command.wait();
+            final_command.wait().unwrap();
         }
     }
 }
